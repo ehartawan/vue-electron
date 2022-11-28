@@ -72,31 +72,36 @@ export const useLabStore = defineStore('Lab', {
             this.lights.push(newLight)
             // window.api.tryActivate()
         },
-        // increment() { //samples//
-        //     this.count++ .
-        //   },
-
-        // not necessary any more due to writing directly onto the json file
-        downloadJSON() {
-            this.lights['name'] = 'Lights'
-            const data = JSON.stringify(this.lights)
-            console.log(data)
-            try {
-                const blob = new Blob([data], { type: 'text/plain' })
-                const e = document.createEvent('MouseEvents')
-                const a = document.createElement('a')
-                a.download = 'test123.json'
-                a.href = window.URL.createObjectURL(blob)
-                a.dataset.downloadurl = ['text/json', a.download, a.href].join(':')
-                e.initEvent('click', true, true)
-                // TODO: Remove deprecated initEvent with event constructor
-                // let evt = new Event('click', { bubbles: true, cancelable: false })
-                a.dispatchEvent(e)
-            } catch (err) {
-                // console.log(err)
-                alert('failed to write out')
+        addNewProjector() {
+            let newProjector = {
+                id: this.projectors.length + 201,
+                name: '',
+                room: '',
+                automationType: 'cbus',
+                ipAddress: ''
             }
+            this.projectors.push(newProjector)
         },
+        // unused due to directly writing json file with fs
+        // downloadJSON() {
+        //     this.lights['name'] = 'Lights'
+        //     const data = JSON.stringify(this.lights)
+        //     console.log(data)
+        //     try {
+        //         const blob = new Blob([data], { type: 'text/plain' })
+        //         const e = document.createEvent('MouseEvents')
+        //         const a = document.createElement('a')
+        //         a.download = 'test123.json'
+        //         a.href = window.URL.createObjectURL(blob)
+        //         a.dataset.downloadurl = ['text/json', a.download, a.href].join(':')
+        //         e.initEvent('click', true, true)
+        //         // let evt = new Event('click', { bubbles: true, cancelable: false })
+        //         a.dispatchEvent(e)
+        //     } catch (err) {
+        //         // console.log(err)
+        //         alert('failed to write out')
+        //     }
+        // },
         writeOutLight() {
             let LightObj = new Object()
             LightObj['name'] = 'lights'
@@ -104,6 +109,14 @@ export const useLabStore = defineStore('Lab', {
             let strLightObj = JSON.stringify(LightObj)
             console.log(strLightObj)
             window.api.exportLight(strLightObj)
+        },
+        writeOutProjector() {
+            let ProjectorObj = new Object()
+            ProjectorObj['name'] = 'Projectors'
+            ProjectorObj['objects'] = this.projectors
+            let strProjectorObj = JSON.stringify(ProjectorObj)
+            console.log(strProjectorObj)
+            window.api.exportLight(strProjectorObj)
         }
     }
 })

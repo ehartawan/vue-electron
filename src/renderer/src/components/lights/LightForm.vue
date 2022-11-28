@@ -16,7 +16,7 @@
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { useLabStore } from '../../store/lab'
+import { useLabStore } from '../../store/labStore'
 
 export default defineComponent({
     name: "lightForm",

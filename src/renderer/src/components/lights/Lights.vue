@@ -24,7 +24,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { storeToRefs } from 'pinia';
-import { useLabStore } from '../../store/lab'
+import { useLabStore } from '../../store/labStore'
 import LightForm from './LightForm.vue';
 
 export default defineComponent({
