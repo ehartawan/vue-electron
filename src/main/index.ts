@@ -1,7 +1,7 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import * as path from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import { spawn, exec } from 'child_process'
+import { spawn } from 'child_process'
 
 function createWindow(): void {
     // Create the browser window.
@@ -62,11 +62,8 @@ app.whenReady().then(() => {
         if (BrowserWindow.getAllWindows().length === 0) createWindow()
     })
     ipcMain.handle('try-activate', function () {
-        console.log(__dirname)
-        console.log('running of the main.js')
-        // let son = spawn('node', ['--version'])
-        // let daughter = spawn('echo', ['The \\$HOME variable is $HOME'])
-        // let son = spawn('ifconfig', { shell: true })
+        // can be invoked from renderer.js through preload.js
+        // kept some examples below
         let son = spawn('cd /Users/erickhartawan; pwd ; node sample.js', { shell: true })
         let daughter = spawn('echo', [`The \\$HOME variable is $HOME`])
         son.stdout.on('data', (data) => {
@@ -78,16 +75,24 @@ app.whenReady().then(() => {
         console.log('running of the main.js after exec')
     })
     ipcMain.handle('export-light', function (event, lightObj) {
-        // const data = JSON.stringify(lightObj)
+        // export Electron API to write file out
         const data = lightObj
         const fs = require('fs')
-        console.log(data) // data contain the require jsonb
-        // console.log(JSON.parse(data))
-        // try {
-        //     fs.writeFileSync('/Users/erickhartawan/lightsamplelatest.json', data, 'utf-8')
-        // } catch (err) {
-        //     console.log(err + ' error has occured')
-        // }
+        console.log(data)
+        console.log(JSON.parse(data))
+        const outputFolder =
+            '/Users/erickhartawan/Documents/workspace/vue-electron/src/main/output/'
+        let count = fs.readdirSync(outputFolder).length
+
+        try {
+            fs.writeFileSync(
+                `/Users/erickhartawan/Documents/workspace/vue-electron/src/main/output/config${count}.json`,
+                data,
+                'utf-8'
+            )
+        } catch (err) {
+            console.log(err + ' error has occured')
+        }
     })
 })
 
